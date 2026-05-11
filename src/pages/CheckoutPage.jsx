@@ -63,7 +63,11 @@ const CheckoutPage = () => {
                 <span>Subtotal</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
-              <div className="mt-3 flex items-center justify-between text-xl font-semibold text-slate-900 dark:text-slate-100">
+              <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+                <span>Impuestos (19%)</span>
+                <span>{formatCurrency(tax)}</span>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-slate-300 pt-3 text-xl font-semibold text-slate-900 dark:border-slate-600 dark:text-slate-100">
                 <span>Total final</span>
                 <span>{formatCurrency(total)}</span>
               </div>

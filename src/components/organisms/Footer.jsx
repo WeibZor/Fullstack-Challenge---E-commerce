@@ -34,10 +34,13 @@ const Footer = () => (
         <div className="space-y-4">
           <h4 className="text-sm font-semibold text-white uppercase tracking-wider">Categorías</h4>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/" className="hover:text-white transition">Electrónicos</Link></li>
-            <li><Link to="/" className="hover:text-white transition">Ropa</Link></li>
-            <li><Link to="/" className="hover:text-white transition">Joyería</Link></li>
-            <li><Link to="/" className="hover:text-white transition">Todos los productos</Link></li>
+            <li><Link to="/category/electronics" className="hover:text-white transition">Electrónicos</Link></li>
+            <li><Link to="/category/mens-clothing" className="hover:text-white transition">Ropa de Hombre</Link></li>
+            <li><Link to="/category/womens-clothing" className="hover:text-white transition">Ropa de Mujer</Link></li>
+            <li><Link to="/category/jewelery" className="hover:text-white transition">Joyería</Link></li>
+            <li><Link to="/category/home-garden" className="hover:text-white transition">Hogar y Jardín</Link></li>
+            <li><Link to="/category/sports-outdoors" className="hover:text-white transition">Deportes</Link></li>
+            <li><Link to="/category/books" className="hover:text-white transition">Libros</Link></li>
           </ul>
         </div>
 

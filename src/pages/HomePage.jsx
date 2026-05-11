@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ProductGrid from '../components/organisms/ProductGrid.jsx';
 import { useProductStore } from '../store/productStore.js';
 import Button from '../components/atoms/Button.jsx';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const { loadProducts, loading, error, products } = useProductStore();
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
     loadProducts();
@@ -13,6 +14,23 @@ const HomePage = () => {
 
   // Featured products (first 4)
   const featuredProducts = products.slice(0, 4);
+
+  // Categories data
+  const categories = [
+    { id: 'all', name: 'Todos', icon: 'grid' },
+    { id: 'electronics', name: 'Electrónicos', icon: 'device' },
+    { id: "men's clothing", name: 'Ropa Hombre', icon: 'user' },
+    { id: "women's clothing", name: 'Ropa Mujer', icon: 'user' },
+    { id: 'jewelery', name: 'Joyería', icon: 'diamond' },
+    { id: 'home & garden', name: 'Hogar y Jardín', icon: 'home' },
+    { id: 'sports & outdoors', name: 'Deportes', icon: 'activity' },
+    { id: 'books', name: 'Libros', icon: 'book' },
+  ];
+
+  // Filter products by selected category
+  const filteredProducts = selectedCategory === 'all'
+    ? products.slice(4, 16) // Show next 12 products when "all" is selected
+    : products.filter(product => product.category === selectedCategory).slice(0, 12);
 
   return (
     <div className="space-y-16">
@@ -98,45 +116,89 @@ const HomePage = () => {
       {/* Categories Section */}
       <section className="space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Categorías destacadas</h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Explora nuestras categorías más populares</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Explora nuestras categorías</h2>
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Descubre productos únicos en cada categoría</p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 p-6">
-              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Electrónicos</h3>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Tecnología de vanguardia</p>
-          </Link>
-          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-green-400 to-green-600 p-6">
-              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Ropa</h3>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Estilo y comodidad</p>
-          </Link>
-          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 p-6">
-              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-              </svg>
-            </div>
-            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Joyería</h3>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Accesorios elegantes</p>
-          </Link>
-          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
-            <div className="aspect-square rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 p-6">
-              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-            </div>
-            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Más categorías</h3>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Descubre todo lo que tenemos</p>
+
+        {/* Category Filters */}
+        <div className="flex space-x-2 overflow-x-auto pb-2">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`whitespace-nowrap rounded-full px-6 py-3 text-sm font-semibold transition-colors ${
+                selectedCategory === category.id
+                  ? 'bg-brand-600 text-white shadow-lg'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Filtered Products */}
+        {filteredProducts.length > 0 && (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+                <div className="aspect-square overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                  />
+                </div>
+                <div className="mt-4 space-y-2">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">
+                    {product.title}
+                  </h3>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <svg
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < Math.floor(product.rating.rate)
+                              ? 'text-yellow-400'
+                              : 'text-slate-300 dark:text-slate-600'
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span className="text-sm text-slate-600 dark:text-slate-400">
+                      ({product.rating.count})
+                    </span>
+                  </div>
+                  <p className="text-xl font-bold text-brand-600 dark:text-brand-400">
+                    ${product.price.toFixed(2)}
+                  </p>
+                </div>
+                <Link
+                  to={`/product/${product.id}`}
+                  className="mt-4 inline-block text-sm font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-300"
+                >
+                  Ver producto →
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Show more link */}
+        <div className="text-center">
+          <Link
+            to="/products"
+            className="inline-flex items-center rounded-full bg-brand-600 px-8 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+          >
+            Ver todos los productos
+            <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </Link>
         </div>
       </section>

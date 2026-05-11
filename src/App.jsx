@@ -12,6 +12,7 @@ const CartPage = React.lazy(() => import('./pages/CartPage.jsx'));
 const CheckoutPage = React.lazy(() => import('./pages/CheckoutPage.jsx'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage.jsx'));
 const WishlistPage = React.lazy(() => import('./pages/WishlistPage.jsx'));
+const CategoryPage = React.lazy(() => import('./pages/CategoryPage.jsx'));
 const LoginPage = React.lazy(() => import('./pages/LoginPage.jsx'));
 const RegisterPage = React.lazy(() => import('./pages/RegisterPage.jsx'));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage.jsx'));
@@ -43,6 +44,14 @@ function App() {
                 <Route path="checkout" element={<CheckoutPage />} />
                 <Route path="profile" element={<ProfilePage />} />
                 <Route path="wishlist" element={<WishlistPage />} />
+                {/* Category routes */}
+                <Route path="category/electronics" element={<CategoryPage />} />
+                <Route path="category/mens-clothing" element={<CategoryPage />} />
+                <Route path="category/womens-clothing" element={<CategoryPage />} />
+                <Route path="category/jewelery" element={<CategoryPage />} />
+                <Route path="category/home-garden" element={<CategoryPage />} />
+                <Route path="category/sports-outdoors" element={<CategoryPage />} />
+                <Route path="category/books" element={<CategoryPage />} />
               </Route>
             </Route>
 

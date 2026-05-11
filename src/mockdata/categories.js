@@ -3,4 +3,7 @@ export const mockCategories = [
   "women's clothing",
   'jewelery',
   'electronics',
+  'home & garden',
+  'sports & outdoors',
+  'books'
 ];
