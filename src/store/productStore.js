@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { fetchProductsApi, fetchCategoriesApi } from '../services/api.js';
 import { mockProducts } from '../mockdata/products.js';
 import { mockCategories } from '../mockdata/categories.js';
+import { productMatchesSearch } from '../utils/search.js';
 
 const getProductKey = (product) => {
   if (product.id != null) return `id:${product.id}`;
@@ -119,19 +120,15 @@ export const useProductStore = create((set, get) => ({
       set({ loading: false });
     }
   },
+  filterProducts: (products, term, category) =>
+    products.filter((product) => {
+      const matchesCategory = category === 'all' || product.category === category;
+      const matchesSearch = productMatchesSearch(product, term);
+      return matchesCategory && matchesSearch;
+    }),
   setSearchTerm: (value) =>
     set((state) => {
-      const term = value.toLowerCase();
-      const filtered = state.products.filter((product) => {
-        const matchText =
-          product.title.toLowerCase().includes(term) ||
-          product.description.toLowerCase().includes(term) ||
-          product.category.toLowerCase().includes(term);
-        const matchCategory =
-          state.activeCategory === 'all' ||
-          product.category === state.activeCategory;
-        return matchText && matchCategory;
-      });
+      const filtered = state.filterProducts(state.products, value, state.activeCategory);
 
       return {
         searchTerm: value,
@@ -142,15 +139,7 @@ export const useProductStore = create((set, get) => ({
     }),
   setCategory: (category) =>
     set((state) => {
-      const filtered = state.products.filter((product) => {
-        const matchCategory = category === 'all' || product.category === category;
-        const term = state.searchTerm.toLowerCase();
-        const matchText =
-          product.title.toLowerCase().includes(term) ||
-          product.description.toLowerCase().includes(term) ||
-          product.category.toLowerCase().includes(term);
-        return matchCategory && matchText;
-      });
+      const filtered = state.filterProducts(state.products, state.searchTerm, category);
 
       return {
         activeCategory: category,

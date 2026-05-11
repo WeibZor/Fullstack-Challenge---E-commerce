@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useProductStore } from '../store/productStore.js';
+import { productMatchesSearch } from '../utils/search.js';
 import Button from '../components/atoms/Button.jsx';
 import { Link } from 'react-router-dom';
 
@@ -31,23 +32,12 @@ const HomePage = () => {
 
   // Filter products by search term and category
   const filteredProducts = useMemo(() => {
-    let filtered = products;
-
-    // Filter by search term
-    if (searchTerm.trim()) {
-      filtered = filtered.filter(product =>
-        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === selectedCategory);
-    }
-
-    return filtered;
+    const normalizedSearch = searchTerm.trim();
+    return products.filter((product) => {
+      const matchesSearch = normalizedSearch ? productMatchesSearch(product, normalizedSearch) : true;
+      const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
   }, [products, searchTerm, selectedCategory]);
 
   // Pagination logic
