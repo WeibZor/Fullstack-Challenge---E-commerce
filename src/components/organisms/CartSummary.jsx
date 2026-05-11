@@ -3,7 +3,7 @@ import QuantityControl from '../molecules/QuantityControl.jsx';
 import { useCartStore } from '../../store/cartStore.js';
 
 const CartSummary = () => {
-  const { items, updateQuantity, removeItem, subtotal, clearCart } = useCartStore();
+  const { items, updateQuantity, removeItem, subtotal, tax, total, clearCart } = useCartStore();
 
   return (
     <aside className="space-y-6 rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
@@ -38,9 +38,13 @@ const CartSummary = () => {
           <span>Subtotal</span>
           <span>${subtotal.toFixed(2)}</span>
         </div>
+        <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
+          <span>Impuestos</span>
+          <span>${tax.toFixed(2)}</span>
+        </div>
         <div className="flex items-center justify-between text-base font-semibold text-slate-900 dark:text-slate-100">
           <span>Total</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>${total.toFixed(2)}</span>
         </div>
       </div>
       <div className="flex flex-col gap-3">

@@ -1,11 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
-import ProductGrid from '../components/organisms/ProductGrid.jsx';
 import { useProductStore } from '../store/productStore.js';
 import Button from '../components/atoms/Button.jsx';
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
-  const { loadProducts, loading, error, products } = useProductStore();
+  const { loadProducts, error, products } = useProductStore();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -414,7 +413,6 @@ const HomePage = () => {
           {error}
         </div>
       )}
-      <ProductGrid loading={loading} />
     </div>
   );
 };
