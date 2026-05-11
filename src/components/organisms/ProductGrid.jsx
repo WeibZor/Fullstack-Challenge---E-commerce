@@ -5,6 +5,7 @@ import SearchForm from '../molecules/SearchForm.jsx';
 import { useProductStore } from '../../store/productStore.js';
 import { useCartStore } from '../../store/cartStore.js';
 import { useEffect } from 'react';
+import { useDebounce } from '../../hooks/useDebounce.js';
 
 const ProductGrid = () => {
   const {
