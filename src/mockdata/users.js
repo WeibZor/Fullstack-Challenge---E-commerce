@@ -11,4 +11,10 @@ export const mockUsers = [
     email: 'javier@market.com',
     password: 'ecommerce2024',
   },
+  {
+    id: 3,
+    name: 'Demo Ecommerce',
+    email: 'demo@ecommerce.com',
+    password: '123456',
+  },
 ];

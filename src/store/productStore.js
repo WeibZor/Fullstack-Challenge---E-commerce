@@ -3,7 +3,15 @@ import { fetchProductsApi, fetchCategoriesApi } from '../services/api.js';
 import { mockProducts } from '../mockdata/products.js';
 import { mockCategories } from '../mockdata/categories.js';
 
-export const useProductStore = create((set) => ({
+const normalizeProduct = (product) => ({
+  ...product,
+  stock: product.stock ?? (product.rating?.count ?? 12),
+  sku: `SKU-${String(product.id).padStart(5, '0')}`,
+  images: [product.image, product.image, product.image],
+  categoryLabel: product.category,
+});
+
+export const useProductStore = create((set, get) => ({
   products: [],
   categories: [],
   filteredProducts: [],
@@ -21,19 +29,21 @@ export const useProductStore = create((set) => ({
         fetchProductsApi(),
         fetchCategoriesApi(),
       ]);
+      const normalizedProducts = products.map(normalizeProduct);
       set({
-        products,
+        products: normalizedProducts,
         categories: ['all', ...categories],
-        filteredProducts: products,
-        totalPages: Math.ceil(products.length / 9),
+        filteredProducts: normalizedProducts,
+        totalPages: Math.ceil(normalizedProducts.length / get().itemsPerPage),
       });
     } catch (error) {
+      const normalizedProducts = mockProducts.map(normalizeProduct);
       set({
-        products: mockProducts,
+        products: normalizedProducts,
         categories: ['all', ...mockCategories],
-        filteredProducts: mockProducts,
-        totalPages: Math.ceil(mockProducts.length / 9),
-        error: 'No fue posible cargar productos. Mostrando datos locales.',
+        filteredProducts: normalizedProducts,
+        totalPages: Math.ceil(normalizedProducts.length / get().itemsPerPage),
+        error: 'No fue posible cargar productos desde la API. Se cargó contenido local.',
       });
     } finally {
       set({ loading: false });
@@ -45,7 +55,8 @@ export const useProductStore = create((set) => ({
       const filtered = state.products.filter((product) => {
         const matchText =
           product.title.toLowerCase().includes(term) ||
-          product.description.toLowerCase().includes(term);
+          product.description.toLowerCase().includes(term) ||
+          product.category.toLowerCase().includes(term);
         const matchCategory =
           state.activeCategory === 'all' ||
           product.category === state.activeCategory;
@@ -56,15 +67,18 @@ export const useProductStore = create((set) => ({
         searchTerm: value,
         page: 1,
         filteredProducts: filtered,
-        totalPages: Math.ceil(filtered.length / state.itemsPerPage),
+        totalPages: Math.max(1, Math.ceil(filtered.length / state.itemsPerPage)),
       };
     }),
   setCategory: (category) =>
     set((state) => {
       const filtered = state.products.filter((product) => {
         const matchCategory = category === 'all' || product.category === category;
-        const matchText = product.title.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
-          product.description.toLowerCase().includes(state.searchTerm.toLowerCase());
+        const term = state.searchTerm.toLowerCase();
+        const matchText =
+          product.title.toLowerCase().includes(term) ||
+          product.description.toLowerCase().includes(term) ||
+          product.category.toLowerCase().includes(term);
         return matchCategory && matchText;
       });
 
@@ -72,11 +86,20 @@ export const useProductStore = create((set) => ({
         activeCategory: category,
         page: 1,
         filteredProducts: filtered,
-        totalPages: Math.ceil(filtered.length / state.itemsPerPage),
+        totalPages: Math.max(1, Math.ceil(filtered.length / state.itemsPerPage)),
       };
     }),
   setPage: (page) => set(() => ({ page })),
   get currentItems() {
     return this.filteredProducts.slice((this.page - 1) * this.itemsPerPage, this.page * this.itemsPerPage);
+  },
+  get featuredProducts() {
+    return this.products.slice(0, 6);
+  },
+  getRecentProducts: () => {
+    return get().products.slice(0, 8);
+  },
+  getRelatedProducts: (category, currentId) => {
+    return get().products.filter((product) => product.category === category && product.id !== currentId).slice(0, 4);
   },
 }));

@@ -5,11 +5,9 @@ import { formatCurrency } from '../utils/format.js';
 import { useAuthStore } from '../store/authStore.js';
 
 const CheckoutPage = () => {
-  const { items, subtotal, clearCart } = useCartStore();
+  const { items, subtotal, tax, total, clearCart } = useCartStore();
   const { user } = useAuthStore();
   const [orderComplete, setOrderComplete] = useState(false);
-
-  const total = useMemo(() => subtotal, [subtotal]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

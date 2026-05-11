@@ -5,53 +5,217 @@ import Button from '../components/atoms/Button.jsx';
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
-  const { loadProducts, loading, error } = useProductStore();
+  const { loadProducts, loading, error, products } = useProductStore();
 
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
 
+  // Featured products (first 4)
+  const featuredProducts = products.slice(0, 4);
+
   return (
-    <div className="space-y-10">
-      <section className="grid gap-8 lg:grid-cols-[1.3fr_0.8fr] lg:items-end">
-        <div className="space-y-6">
-          <span className="inline-flex rounded-full bg-brand-100 px-4 py-2 text-sm font-semibold text-brand-700">
-            Tienda moderna
-          </span>
-          <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
-            Descubre productos premium con experiencia SPA y diseño responsive.
-          </h1>
-          <p className="max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">
-            Navega, filtra y compra con un flujo optimizado. El carrito persiste localmente y la interfaz se adapta a móvil, tablet y desktop.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/cart">
-              <Button>Ver carrito</Button>
-            </Link>
-            <Link to="/login">
-              <Button variant="secondary">Iniciar sesión</Button>
-            </Link>
-          </div>
-        </div>
-        <div className="rounded-[32px] bg-brand-500/5 p-8 shadow-soft dark:bg-brand-500/10">
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Valor añadido</h2>
-          <ul className="mt-6 space-y-4 text-slate-600 dark:text-slate-300">
-            <li>• Filtros por categoría y búsqueda en tiempo real.</li>
-            <li>• Persistencia de carrito y sesión en localStorage.</li>
-            <li>• Diseño escalable basado en Atomic Design.</li>
-          </ul>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl bg-white p-4 shadow-sm dark:bg-slate-900">
-              <p className="text-2xl font-semibold text-brand-600 dark:text-brand-300">9+</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Productos listos</p>
+    <div className="space-y-16">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 px-6 py-16 text-white sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+            <div className="space-y-6">
+              <span className="inline-flex rounded-full bg-white/10 backdrop-blur-sm px-4 py-2 text-sm font-semibold">
+                ✨ Tienda moderna 2026
+              </span>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+                Descubre productos premium con experiencia SPA excepcional
+              </h1>
+              <p className="max-w-xl text-lg leading-8 text-brand-100">
+                Navega, filtra y compra con un flujo optimizado. El carrito persiste localmente y la interfaz se adapta perfectamente a todos los dispositivos.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link to="/cart">
+                  <Button className="bg-white text-brand-600 hover:bg-brand-50">Ver carrito</Button>
+                </Link>
+                <Link to="/login">
+                  <Button variant="outline" className="border-white text-white hover:bg-white hover:text-brand-600">
+                    Iniciar sesión
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <div className="rounded-3xl bg-white p-4 shadow-sm dark:bg-slate-900">
-              <p className="text-2xl font-semibold text-brand-600 dark:text-brand-300">100%</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Experiencia SPA</p>
+            <div className="relative">
+              <div className="aspect-square rounded-[32px] bg-white/10 backdrop-blur-sm p-8">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="aspect-square rounded-2xl bg-white/20"></div>
+                  <div className="aspect-square rounded-2xl bg-white/20"></div>
+                  <div className="aspect-square rounded-2xl bg-white/20"></div>
+                  <div className="aspect-square rounded-2xl bg-white/20"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Features Section */}
+      <section className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-[32px] border border-slate-200 bg-white p-6 text-center shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/30">
+            <svg className="h-6 w-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Envío rápido</h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Entrega en 24-48 horas</p>
+        </div>
+        <div className="rounded-[32px] border border-slate-200 bg-white p-6 text-center shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/30">
+            <svg className="h-6 w-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Garantía</h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">30 días de devolución</p>
+        </div>
+        <div className="rounded-[32px] border border-slate-200 bg-white p-6 text-center shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/30">
+            <svg className="h-6 w-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Pago seguro</h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">SSL certificado</p>
+        </div>
+        <div className="rounded-[32px] border border-slate-200 bg-white p-6 text-center shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/30">
+            <svg className="h-6 w-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Soporte 24/7</h3>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Atención personalizada</p>
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section className="space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Categorías destacadas</h2>
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Explora nuestras categorías más populares</p>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div className="aspect-square rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 p-6">
+              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Electrónicos</h3>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Tecnología de vanguardia</p>
+          </Link>
+          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div className="aspect-square rounded-2xl bg-gradient-to-br from-green-400 to-green-600 p-6">
+              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Ropa</h3>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Estilo y comodidad</p>
+          </Link>
+          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div className="aspect-square rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 p-6">
+              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Joyería</h3>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Accesorios elegantes</p>
+          </Link>
+          <Link to="/" className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div className="aspect-square rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 p-6">
+              <svg className="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h3 className="mt-4 text-lg font-semibold text-slate-900 group-hover:text-brand-600 dark:text-slate-100">Más categorías</h3>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Descubre todo lo que tenemos</p>
+          </Link>
+        </div>
+      </section>
+
+      {/* Featured Products Section */}
+      {featuredProducts.length > 0 && (
+        <>
+          <section className="space-y-8">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Productos destacados</h2>
+              <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Los más vendidos y mejor valorados</p>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredProducts.map((product) => (
+                <div key={product.id} className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+                  <img src={product.image} alt={product.title} className="aspect-square w-full rounded-2xl object-cover" />
+                  <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">{product.title}</h3>
+                  <p className="mt-2 text-xl font-bold text-brand-600 dark:text-brand-400">${product.price.toFixed(2)}</p>
+                  <Link to={`/product/${product.id}`} className="mt-4 inline-block text-sm font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-300">
+                    Ver producto →
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* Testimonials Section */}
+      <section className="rounded-[32px] bg-slate-50 px-6 py-16 dark:bg-slate-900/50">
+        <div className="mx-auto max-w-7xl text-center">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Lo que dicen nuestros clientes</h2>
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+              <div className="flex text-yellow-400">
+                {'★'.repeat(5)}
+              </div>
+              <p className="mt-4 text-slate-600 dark:text-slate-400">"Excelente experiencia de compra. La interfaz es intuitiva y el envío fue rapidísimo."</p>
+              <p className="mt-4 font-semibold text-slate-900 dark:text-slate-100">María García</p>
+            </div>
+            <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
+              <div className="flex text-yellow-400">
+                {'★'.repeat(5)}
+              </div>
+              <p className="mt-4 text-slate-600 dark:text-slate-400">"Productos de calidad y atención al cliente excepcional. Recomiendo totalmente."</p>
+              <p className="mt-4 font-semibold text-slate-900 dark:text-slate-100">Carlos Rodríguez</p>
+            </div>
+            <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900 sm:col-span-2 lg:col-span-1">
+              <div className="flex text-yellow-400">
+                {'★'.repeat(5)}
+              </div>
+              <p className="mt-4 text-slate-600 dark:text-slate-400">"La mejor tienda online que he usado. Diseño moderno y funcionalidad perfecta."</p>
+              <p className="mt-4 font-semibold text-slate-900 dark:text-slate-100">Ana López</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="rounded-[32px] bg-brand-600 px-6 py-16 text-white">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold">Suscríbete a nuestro newsletter</h2>
+          <p className="mt-4 text-lg text-brand-100">
+            Recibe ofertas exclusivas, nuevos productos y consejos de moda directamente en tu email.
+          </p>
+          <div className="mt-8 flex">
+            <input
+              type="email"
+              placeholder="Tu email"
+              className="flex-1 rounded-l-lg border-0 px-4 py-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-white"
+            />
+            <button className="rounded-r-lg bg-white px-6 py-3 font-semibold text-brand-600 hover:bg-brand-50 transition">
+              Suscribir
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* All Products Section */}
       {error && (
         <div className="rounded-3xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-200">
           {error}

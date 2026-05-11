@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchProductByIdApi } from '../services/api.js';
 import { useCartStore } from '../store/cartStore.js';
+import { useWishlistStore } from '../store/wishlistStore.js';
 import Button from '../components/atoms/Button.jsx';
 import Badge from '../components/atoms/Badge.jsx';
 import { formatCurrency } from '../utils/format.js';
@@ -12,6 +13,18 @@ const ProductDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const addItem = useCartStore((state) => state.addItem);
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+
+  const inWishlist = product ? isInWishlist(product.id) : false;
+
+  const handleWishlistToggle = () => {
+    if (!product) return;
+    if (inWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -66,9 +79,21 @@ const ProductDetailPage = () => {
             </div>
           </div>
         </div>
-        <Button variant="primary" className="w-full" onClick={() => addItem(product)}>
-          Agregar al carrito
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={handleWishlistToggle}
+          >
+            <svg className={`mr-2 h-4 w-4 ${inWishlist ? 'fill-current text-red-500' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            {inWishlist ? 'En lista de deseos' : 'Agregar a lista de deseos'}
+          </Button>
+          <Button variant="primary" className="flex-1" onClick={() => addItem(product)}>
+            Agregar al carrito
+          </Button>
+        </div>
         <Link to="/cart" className="block text-center text-sm font-semibold text-brand-600 hover:text-brand-700">
           Ver carrito
         </Link>

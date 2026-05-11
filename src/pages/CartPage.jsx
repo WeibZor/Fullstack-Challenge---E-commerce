@@ -4,7 +4,7 @@ import Button from '../components/atoms/Button.jsx';
 import QuantityControl from '../components/molecules/QuantityControl.jsx';
 
 const CartPage = () => {
-  const { items, updateQuantity, removeItem, subtotal, clearCart } = useCartStore();
+  const { items, updateQuantity, removeItem, subtotal, tax, total, clearCart } = useCartStore();
 
   if (!items.length) {
     return (
@@ -46,9 +46,19 @@ const CartPage = () => {
           <p className="text-sm uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Resumen</p>
           <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Total</h2>
         </div>
-        <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
-          <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
+            <span>Subtotal</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
+            <span>Impuestos (19%)</span>
+            <span>${tax.toFixed(2)}</span>
+          </div>
+          <div className="flex items-center justify-between border-t border-slate-300 pt-3 text-lg font-semibold text-slate-900 dark:border-slate-600 dark:text-slate-100">
+            <span>Total</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
         </div>
         <div className="space-y-3">
           <Link to="/checkout">
