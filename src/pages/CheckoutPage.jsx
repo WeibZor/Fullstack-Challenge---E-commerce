@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { useCartStore } from '../store/cartStore.js';
 import Button from '../components/atoms/Button.jsx';
 import { formatCurrency } from '../utils/format.js';
@@ -13,9 +14,10 @@ const CheckoutPage = () => {
     event.preventDefault();
     setOrderComplete(true);
     clearCart();
+    toast.success('¡Gracias por tu compra! Tu orden ha sido confirmada.');
   };
 
-  if (!items.length) {
+  if (!items.length && !orderComplete) {
     return (
       <div className="rounded-[32px] border border-slate-200 bg-white p-10 shadow-soft dark:border-slate-800 dark:bg-slate-900">
         <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">No hay artículos para pagar</h2>
@@ -72,7 +74,7 @@ const CheckoutPage = () => {
                 <span>{formatCurrency(total)}</span>
               </div>
             </div>
-            <Button className="w-full">Confirmar compra</Button>
+            <Button type="submit" className="w-full">Confirmar compra</Button>
           </form>
         )}
       </section>

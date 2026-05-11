@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import ProductGrid from '../components/organisms/ProductGrid.jsx';
 import { useProductStore } from '../store/productStore.js';
 import Button from '../components/atoms/Button.jsx';
@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom';
 const HomePage = () => {
   const { loadProducts, loading, error, products } = useProductStore();
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   useEffect(() => {
     loadProducts();
@@ -27,13 +30,45 @@ const HomePage = () => {
     { id: 'books', name: 'Libros', icon: 'book' },
   ];
 
-  // Filter products by selected category
-  const filteredProducts = selectedCategory === 'all'
-    ? products.slice(4, 16) // Show next 12 products when "all" is selected
-    : products.filter(product => product.category === selectedCategory).slice(0, 12);
+  // Filter products by search term and category
+  const filteredProducts = useMemo(() => {
+    let filtered = products;
+
+    // Filter by search term
+    if (searchTerm.trim()) {
+      filtered = filtered.filter(product =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => product.category === selectedCategory);
+    }
+
+    return filtered;
+  }, [products, searchTerm, selectedCategory]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-8">
       {/* Hero Section */}
       <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 px-6 py-16 text-white sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
@@ -116,8 +151,36 @@ const HomePage = () => {
       {/* Categories Section */}
       <section className="space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Explora nuestras categorías</h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Descubre productos únicos en cada categoría</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Explora nuestros productos</h2>
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">Busca y filtra productos únicos en cada categoría</p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="mx-auto max-w-md">
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+              <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Buscar productos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full rounded-full border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm placeholder-slate-400 shadow-soft focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-brand-400"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Category Filters */}
@@ -137,10 +200,22 @@ const HomePage = () => {
           ))}
         </div>
 
+        {/* Search Results Info */}
+        {(searchTerm || selectedCategory !== 'all') && (
+          <div className="text-center">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              {searchTerm && `Resultados para "${searchTerm}"`}
+              {searchTerm && selectedCategory !== 'all' && ' en '}
+              {selectedCategory !== 'all' && `categoría ${categories.find(c => c.id === selectedCategory)?.name}`}
+              {filteredProducts.length > 0 && ` (${filteredProducts.length} productos)`}
+            </p>
+          </div>
+        )}
+
         {/* Filtered Products */}
-        {filteredProducts.length > 0 && (
+        {currentProducts.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {filteredProducts.map((product) => (
+            {currentProducts.map((product) => (
               <div key={product.id} className="group rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
                 <div className="aspect-square overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
                   <img
@@ -186,6 +261,62 @@ const HomePage = () => {
                 </Link>
               </div>
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+              <svg className="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">No se encontraron productos</h3>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+              Intenta con otros términos de búsqueda o selecciona una categoría diferente.
+            </p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {Array.from({ length: Math.min(totalPages, 9) }, (_, i) => {
+                const pageNumber = i + 1;
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => handlePageChange(pageNumber)}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                      currentPage === pageNumber
+                        ? 'bg-brand-600 text-white'
+                        : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-slate-800 dark:hover:text-slate-300"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
         )}
 
