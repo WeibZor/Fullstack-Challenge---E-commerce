@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore.js';
+import { formatCurrency } from '../utils/format.js';
 import Button from '../components/atoms/Button.jsx';
 import QuantityControl from '../components/molecules/QuantityControl.jsx';
 
@@ -49,15 +50,15 @@ const CartPage = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>{formatCurrency(subtotal)}</span>
           </div>
           <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
             <span>Impuestos (19%)</span>
-            <span>${tax.toFixed(2)}</span>
+            <span>{formatCurrency(tax)}</span>
           </div>
           <div className="flex items-center justify-between border-t border-slate-300 pt-3 text-lg font-semibold text-slate-900 dark:border-slate-600 dark:text-slate-100">
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>Total final</span>
+            <span>{formatCurrency(total)}</span>
           </div>
         </div>
         <div className="space-y-3">

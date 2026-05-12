@@ -9,9 +9,16 @@ const CheckoutPage = () => {
   const { items, subtotal, tax, total, clearCart } = useCartStore();
   const { user } = useAuthStore();
   const [orderComplete, setOrderComplete] = useState(false);
+  const [orderSummary, setOrderSummary] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setOrderSummary({
+      items: [...items],
+      subtotal,
+      tax,
+      total,
+    });
     setOrderComplete(true);
     clearCart();
     toast.success('¡Gracias por tu compra! Tu orden ha sido confirmada.');
@@ -31,9 +38,36 @@ const CheckoutPage = () => {
       <section className="space-y-6 rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900">
         <h1 className="text-3xl font-semibold text-slate-900 dark:text-slate-100">Checkout</h1>
         {orderComplete ? (
-          <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 text-slate-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-200">
+          <div className="space-y-6 rounded-3xl border border-emerald-200 bg-emerald-50 p-6 text-slate-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-200">
             <h2 className="text-xl font-semibold">¡Compra completada!</h2>
             <p className="mt-2 text-sm">Gracias por tu pedido, {user?.name || 'cliente'}. Tu pago ha sido procesado correctamente.</p>
+            {orderSummary && (
+              <div className="space-y-4 rounded-3xl bg-white p-4 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
+                <h3 className="text-lg font-semibold">Resumen de tu orden</h3>
+                <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                  {orderSummary.items.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between gap-4">
+                      <span>{item.quantity}x {item.title}</span>
+                      <strong>{formatCurrency(item.price * item.quantity)}</strong>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 space-y-2 border-t border-slate-200 pt-4 dark:border-slate-800">
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Subtotal</span>
+                    <span>{formatCurrency(orderSummary.subtotal)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Impuestos</span>
+                    <span>{formatCurrency(orderSummary.tax)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-base font-semibold">
+                    <span>Total</span>
+                    <span>{formatCurrency(orderSummary.total)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
