@@ -1,8 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/templates/Layout.jsx';
-import ProtectedRoute from './routes/ProtectedRoute.jsx';
-import GuestRoute from './routes/GuestRoute.jsx';
 import LoaderSkeleton from './components/atoms/Skeleton.jsx';
 import { useAuthStore } from './store/authStore.js';
 
@@ -29,37 +27,29 @@ function App() {
       <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
         <Suspense fallback={<LoaderSkeleton />}>
           <Routes>
-            {/* Guest routes - redirect to home if authenticated */}
-            <Route element={<GuestRoute />}>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
+            {/* Root route - redirect based on auth */}
+            <Route path="/" element={user ? <Layout /> : <Navigate to="/login" replace />}>
+              <Route index element={<HomePage />} />
+              <Route path="product/:id" element={<ProductDetailPage />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="wishlist" element={<WishlistPage />} />
+              <Route path="category/electronics" element={<CategoryPage />} />
+              <Route path="category/mens-clothing" element={<CategoryPage />} />
+              <Route path="category/womens-clothing" element={<CategoryPage />} />
+              <Route path="category/jewelery" element={<CategoryPage />} />
+              <Route path="category/home-garden" element={<CategoryPage />} />
+              <Route path="category/sports-outdoors" element={<CategoryPage />} />
+              <Route path="category/books" element={<CategoryPage />} />
             </Route>
 
-            {/* Protected routes - require authentication */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<HomePage />} />
-                <Route path="product/:id" element={<ProductDetailPage />} />
-                <Route path="cart" element={<CartPage />} />
-                <Route path="checkout" element={<CheckoutPage />} />
-                <Route path="profile" element={<ProfilePage />} />
-                <Route path="wishlist" element={<WishlistPage />} />
-                {/* Category routes */}
-                <Route path="category/electronics" element={<CategoryPage />} />
-                <Route path="category/mens-clothing" element={<CategoryPage />} />
-                <Route path="category/womens-clothing" element={<CategoryPage />} />
-                <Route path="category/jewelery" element={<CategoryPage />} />
-                <Route path="category/home-garden" element={<CategoryPage />} />
-                <Route path="category/sports-outdoors" element={<CategoryPage />} />
-                <Route path="category/books" element={<CategoryPage />} />
-              </Route>
-            </Route>
+            {/* Auth routes - only accessible without auth */}
+            <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
+            <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterPage />} />
 
-            {/* Public routes */}
+            {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
-
-            {/* Redirect root to login if not authenticated */}
-            <Route path="/" element={!user ? <Navigate to="/login" replace /> : <Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </div>
